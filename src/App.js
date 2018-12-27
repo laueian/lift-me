@@ -1,25 +1,35 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import Card from "./components/Card.js";
+import Header from "./components/Header.js";
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      quotes: []
+    };
+  }
+
+  componentDidMount() {
+    fetch("http://lift-me-core.ianlaue.com/quotes")
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        this.setState({ quotes: data });
+      });
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Header />
+        <ul className="Cards">
+          {this.state.quotes.map((item, i) => {
+            return <Card body={item.body} author={item.author} key={i} />;
+          })}
+        </ul>
       </div>
     );
   }
